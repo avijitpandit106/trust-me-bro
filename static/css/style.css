@@ -653,22 +653,30 @@ button:hover,
   text-align: center;
 
   margin-top: 25px;
+
+  font-size: 1.1rem;
+
+  color: var(--muted);
 }
 
-.loading-container img {
-  width: 70px;
+.dots span {
+  animation: dots-blink 1.4s infinite;
 
-  animation: spin 1s linear infinite;
+  font-weight: bold;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
 
-  to {
-    transform: rotate(360deg);
-  }
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dots-blink {
+  0%, 20% { opacity: 0; }
+  50%     { opacity: 1; }
+  100%    { opacity: 0; }
 }
 
 /* =====================
@@ -735,6 +743,7 @@ button:hover,
 ===================== */
 
 @media print {
+  header,
   .navbar,
   .footer,
   .download-section,
@@ -745,22 +754,64 @@ button:hover,
     display: none !important;
   }
 
-  body {
-    background: #fff;
-
-    color: #000;
+  * {
+    box-shadow: none !important;
   }
 
-  .result-card,
-  .report-card,
-  .analysis-card {
-    box-shadow: none;
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 11px;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+  }
 
+  .report-page {
+    padding: 0;
+  }
+
+  .report-container {
+    max-width: 100%;
+    padding: 10px 15px;
+  }
+
+  .report-container h2 {
+    font-size: 16px;
+    margin: 0 0 8px 0;
+  }
+
+  .report-card {
+    padding: 10px;
+    background: #fff;
     border: 1px solid #ddd;
+  }
+
+  .report-row {
+    margin-bottom: 8px;
+  }
+
+  .report-row strong {
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .report-row p,
+  .report-row ul {
+    font-size: 11px;
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .report-row li {
+    margin-bottom: 2px;
+    color: #333;
   }
 
   .badge {
     border: 1px solid #000;
+    padding: 3px 10px;
+    font-size: 10px;
   }
 }
 

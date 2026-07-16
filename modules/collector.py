@@ -108,7 +108,10 @@ def _whois_lookup(url):
 
         domain_age_days = None
         if creation_date:
-            delta = datetime.now() - creation_date
+            now = datetime.now()
+            if creation_date.tzinfo is not None:
+                now = datetime.now(timezone.utc)
+            delta = now - creation_date
             domain_age_days = delta.days
 
         return {

@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (copyBtn && displayURL) {
     copyBtn.addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(displayURL.textContent);
+        await navigator.clipboard.writeText(displayURL.textContent.trim());
 
         const original = copyBtn.textContent;
 
