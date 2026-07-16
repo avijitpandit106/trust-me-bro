@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Analysis Result | Trust Me Bro</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+
+<body>
+
+
+	<header>
+
+
+		<nav class="navbar">
+
+
+			<div class="logo-section">
+
+
+				<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="logo">
+
+
+				<h1>Trust Me Bro</h1>
+
+
+			</div>
+
+
+			<button class="menu-toggle" aria-label="Toggle Navigation">
+				<i class="fas fa-bars"></i>
+			</button>
+
+
+			<ul class="nav-links">
+
+
+				<li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+
+
+				<li><a href="/report"><i class="fas fa-file-alt"></i> Report</a></li>
+
+
+			</ul>
+
+
+		</nav>
+
+
+	</header>
+
+
+	<main class="result-page">
+
+
+		<section class="result-container">
+
+
+			<h2>
+				<i class="fas fa-chart-bar"></i> Analysis Result
+			</h2>
+
+
+			<div class="result-card">
+
+
+				<div class="result-item">
+
+
+					<h3><i class="fas fa-link"></i> URL</h3>
+
+
+					<p id="display-url">
+						{{ url }}
+					</p>
+
+
+					<button id="copyURLBtn" class="secondary-btn">
+						<i class="fas fa-copy"></i> Copy URL
+					</button>
+
+
+				</div>
+
+
+				<div class="result-item">
+
+
+					<h3><i class="fas fa-exclamation-circle"></i> Risk Score</h3>
+
+
+					<p class="risk-score">
+
+
+						{{ risk_score }} / 100
+
+
+					</p>
+
+
+				</div>
+
+
+				<div class="result-item">
+
+
+					<h3><i class="fas fa-tag"></i> Classification</h3>
+
+
+					<span class="badge {{ badge_class }}">
+
+						{{ classification }}
+
+					</span>
+
+
+				</div>
+
+
+			</div>
+
+
+			<section class="reason-section">
+
+
+				<h2>
+
+
+					<i class="fas fa-list-ul"></i> Reasons
+
+
+				</h2>
+
+
+				<ul>
+
+
+					{% for reason in reasons %}
+					<li>{{ reason }}</li>
+					{% endfor %}
+
+
+				</ul>
+
+
+			</section>
+
+
+			<section class="recommendation-section">
+
+
+				<h2>
+
+
+					<i class="fas fa-lightbulb"></i> Recommendations
+
+
+				</h2>
+
+
+				<ul>
+
+
+					{% for rec in recommendations %}
+					<li>{{ rec }}</li>
+					{% endfor %}
+
+
+				</ul>
+
+
+			</section>
+
+
+			<div class="download-section">
+
+
+				<a href="/report" class="primary-btn">
+					<i class="fas fa-download"></i> Download Incident Report
+				</a>
+
+
+			</div>
+
+
+			<div class="back-home">
+
+
+				<a href="/" class="secondary-btn">
+					<i class="fas fa-arrow-left"></i> Analyze Another URL
+				</a>
+
+
+			</div>
+
+
+		</section>
+
+
+	</main>
+
+
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+</body>
+
+
+</html>

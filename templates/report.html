@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+
+
+	<meta charset="UTF-8">
+
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+	<title>Incident Report | Trust Me Bro</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+</head>
+
+
+<body>
+
+
+	<header>
+
+
+		<nav class="navbar">
+
+
+			<div class="logo-section">
+
+
+				<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Trust Me Bro Logo" class="logo">
+
+
+				<h1>
+					Trust Me Bro
+				</h1>
+
+
+			</div>
+
+
+			<button class="menu-toggle" aria-label="Toggle Navigation">
+				<i class="fas fa-bars"></i>
+			</button>
+
+
+			<ul class="nav-links">
+
+
+				<li>
+					<a href="/"><i class="fas fa-home"></i> Home</a>
+				</li>
+
+
+				<li>
+					<a href="/result"><i class="fas fa-chart-bar"></i> Results</a>
+				</li>
+
+
+			</ul>
+
+
+		</nav>
+
+
+	</header>
+
+
+	<main class="report-page">
+
+
+		<section class="report-container">
+
+
+			<h2>
+
+
+				<i class="fas fa-file-alt"></i> Incident Report
+
+
+			</h2>
+
+
+			<div class="report-card">
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-link"></i> Analyzed URL
+					</strong>
+
+
+					<p>
+						{{ url }}
+					</p>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-exclamation-circle"></i> Risk Score
+					</strong>
+
+
+					<p>
+						{{ risk_score }} / 100
+					</p>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-tag"></i> Classification
+					</strong>
+
+
+					<span class="badge {{ badge_class }}">
+						{{ classification }}
+					</span>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-list-ul"></i> Indicators
+					</strong>
+
+
+					<ul>
+
+
+						{% for reason in reasons %}
+						<li>{{ reason }}</li>
+						{% endfor %}
+
+
+					</ul>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-lightbulb"></i> Recommendations
+					</strong>
+
+
+					<ul>
+
+
+						{% for rec in recommendations %}
+						<li>{{ rec }}</li>
+						{% endfor %}
+
+
+					</ul>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-calendar"></i> Generated Date
+					</strong>
+
+
+					<p>
+						{{ generated_date }}
+					</p>
+
+
+				</div>
+
+
+				<div class="report-row">
+
+
+					<strong>
+						<i class="fas fa-clock"></i> Generated Time
+					</strong>
+
+
+					<p>
+						{{ generated_time }}
+					</p>
+
+
+				</div>
+
+
+			</div>
+
+
+			<div class="report-actions">
+
+
+				<a href="/" class="secondary-btn">
+					<i class="fas fa-arrow-left"></i> Analyze Another URL
+				</a>
+
+
+				<button onclick="window.print()" class="primary-btn">
+					<i class="fas fa-print"></i> Print Report
+				</button>
+
+
+			</div>
+
+
+		</section>
+
+
+	</main>
+
+
+	<footer class="footer">
+
+
+		<p>
+
+
+			&copy; 2026 Trust Me Bro &bull; Cybersecurity Project
+
+
+		</p>
+
+
+	</footer>
+
+
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+</body>
+
+
+</html>
