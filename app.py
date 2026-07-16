@@ -12,11 +12,13 @@ from config import REPORTS_DIR
 from database.database import init_db, get_scan, get_latest_scan
 from modules.analyzer import analyze_url
 from modules.report_generator import generate_pdf
+from modules.trainer import init_training, get_training_stats, get_all_learned_weights, get_learned_keywords
 
 app = Flask(__name__)
 
-# Initialize the database on startup
+# Initialize the database and training tables on startup
 init_db()
+init_training()
 
 
 @app.route("/")
@@ -95,6 +97,20 @@ def download_report():
         filename,
         as_attachment=True,
         download_name=f"TrustMeBro_Report_{scan['id']}.pdf",
+    )
+
+
+@app.route("/stats")
+def stats():
+    """Show training statistics and learned intelligence."""
+    training = get_training_stats()
+    weights = get_all_learned_weights()
+    keywords = get_learned_keywords()
+    return render_template(
+        "stats.html",
+        training=training,
+        weights=weights,
+        keywords=keywords,
     )
 
 

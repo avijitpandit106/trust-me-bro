@@ -185,6 +185,13 @@ def score(collected_data):
 
 
 def _indicator(key):
-    """Build an indicator dict from its config key."""
+    """Build an indicator dict, preferring learned weight over config default."""
+    try:
+        from modules.trainer import get_learned_weight
+        learned = get_learned_weight(key)
+        if learned and learned["confidence"] >= 0.2:
+            return {"key": key, "points": learned["weight"], "label": SCORING_WEIGHTS[key][1]}
+    except Exception:
+        pass
     points, label = SCORING_WEIGHTS[key]
     return {"key": key, "points": points, "label": label}
