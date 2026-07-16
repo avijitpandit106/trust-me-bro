@@ -1,76 +1,102 @@
-from flask import Flask, render_template, request
+# ===================================
+#  Trust Me Bro — Flask Application
+#  Phishing Detection Web Server
+# ===================================
+
+import os
+from datetime import datetime
+
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
+
+from config import REPORTS_DIR
+from database.database import init_db, get_scan, get_latest_scan
+from modules.analyzer import analyze_url
+from modules.report_generator import generate_pdf
 
 app = Flask(__name__)
+
+# Initialize the database on startup
+init_db()
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
+
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    url = request.form.get("url", "")
+    url = request.form.get("url", "").strip()
 
-    # Placeholder data — replace with real analysis logic later
-    risk_score = 82
-    classification = "High Risk"
-    badge_class = "high-risk"
-    reasons = [
-        "Recently registered domain",
-        "Invalid SSL Certificate",
-        "Contains suspicious keywords",
-        "Redirect detected",
-        "Domain resembles a popular brand",
-    ]
-    recommendations = [
-        "Do not visit this website.",
-        "Do not submit credentials.",
-        "Report this URL to your administrator.",
-    ]
+    if not url:
+        return redirect(url_for("home"))
+
+    # Run the full analysis pipeline
+    result = analyze_url(url)
 
     return render_template(
         "result.html",
-        url=url,
-        risk_score=risk_score,
-        classification=classification,
-        badge_class=badge_class,
-        reasons=reasons,
-        recommendations=recommendations,
+        url=result["url"],
+        risk_score=result["risk_score"],
+        classification=result["classification"],
+        badge_class=result["badge_class"],
+        reasons=result["reasons"],
+        recommendations=result["recommendations"],
+        scan_id=result["scan_id"],
     )
+
 
 @app.route("/report")
 def report():
-    url = "https://paypal-login.xyz"
-    risk_score = 82
-    classification = "High Risk"
-    badge_class = "high-risk"
-    reasons = [
-        "Recently Registered Domain",
-        "Invalid SSL Certificate",
-        "Redirect Detected",
-        "Suspicious Keywords Found",
-        "Brand Impersonation Detected",
-    ]
-    recommendations = [
-        "Do not visit the website.",
-        "Do not enter passwords or payment details.",
-        "Report the URL to your administrator.",
-        "Block the domain if necessary.",
-    ]
+    # Try to load a specific scan by ID, otherwise use the latest
+    scan_id = request.args.get("scan_id", type=int)
 
-    from datetime import datetime
-    now = datetime.now()
+    if scan_id:
+        scan = get_scan(scan_id)
+    else:
+        scan = get_latest_scan()
+
+    if scan is None:
+        return redirect(url_for("home"))
+
+    # Parse the timestamp for display
+    scanned_at = datetime.fromisoformat(scan["scanned_at"])
 
     return render_template(
         "report.html",
-        url=url,
-        risk_score=risk_score,
-        classification=classification,
-        badge_class=badge_class,
-        reasons=reasons,
-        recommendations=recommendations,
-        generated_date=now.strftime("%d %B %Y"),
-        generated_time=now.strftime("%I:%M %p"),
+        url=scan["url"],
+        risk_score=scan["risk_score"],
+        classification=scan["classification"],
+        badge_class=scan["badge_class"],
+        reasons=scan["reasons"],
+        recommendations=scan["recommendations"],
+        generated_date=scanned_at.strftime("%d %B %Y"),
+        generated_time=scanned_at.strftime("%I:%M %p"),
     )
+
+
+@app.route("/download")
+def download_report():
+    """Generate a PDF incident report and serve it for download."""
+    scan_id = request.args.get("scan_id", type=int)
+
+    if scan_id:
+        scan = get_scan(scan_id)
+    else:
+        scan = get_latest_scan()
+
+    if scan is None:
+        return redirect(url_for("home"))
+
+    filename = generate_pdf(scan)
+
+    return send_from_directory(
+        REPORTS_DIR,
+        filename,
+        as_attachment=True,
+        download_name=f"TrustMeBro_Report_{scan['id']}.pdf",
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
